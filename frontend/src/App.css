@@ -1,0 +1,232 @@
+* {
+  box-sizing: border-box;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background-color: #1e1e1e;
+  color: #cccccc;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow: hidden; /* no scrollbars on the window */
+}
+
+.layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: #1e1e1e;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 250px;
+  background-color: #252526;
+  border-right: 1px solid #333333;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  padding: 10px 15px;
+  background-color: #1e1e1e;
+  border-bottom: 1px solid #333333;
+}
+
+.sidebar-header .title {
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.explorer {
+  padding: 10px 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.explorer-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 15px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #cccccc;
+  user-select: none;
+}
+
+.explorer-item:hover {
+  background-color: #2a2d2e;
+  color: #ffffff;
+}
+
+.explorer-item.active {
+  background-color: #37373d;
+  color: #ffffff;
+}
+
+.explorer-item .icon {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+/* Main Editor Container */
+.editor-container {
+  flex: 1;
+  position: relative;
+  background-color: #1e1e1e;
+}
+
+/* AI Interactive Tooltip */
+.ai-suggestion-box {
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+  width: 380px;
+  background: rgba(30, 30, 30, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  color: #e0e0e0;
+  z-index: 1000;
+  overflow: hidden;
+  animation: slideIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ai-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(147, 51, 234, 0.15);
+  color: #d8b4fe;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.ai-dismiss {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.ai-dismiss:hover {
+  opacity: 1;
+}
+
+.ai-content {
+  padding: 15px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.ai-code-snippet {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #9cdcfe;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+.ai-bold-text {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Chat Input Bar */
+.chat-input-container {
+  padding: 10px 15px;
+  background-color: #1e1e1e;
+  border-top: 1px solid #3c3c3c;
+  flex-shrink: 0;
+}
+.chat-input {
+  width: 100%;
+  padding: 10px 15px;
+  background-color: #2d2d30;
+  border: 1px solid #4a4a4a;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.chat-input:focus {
+  border-color: #007acc;
+}
+
+/* Chat Panel */
+.chat-panel {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  right: 15px;
+  max-height: 400px;
+  background-color: #252526;
+  border: 1px solid #454545;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  z-index: 500;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+.chat-header {
+  padding: 10px 15px;
+  background: #333333;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #454545;
+  font-size: 13px;
+  font-weight: 500;
+}
+.chat-header button {
+  background: none;
+  border: none;
+  color: #cccccc;
+  cursor: pointer;
+}
+.chat-header button:hover {
+  color: #fff;
+}
+.chat-messages {
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.chat-message {
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+.chat-message.user {
+  color: #9cdcfe;
+}
+.chat-message.ai {
+  color: #ce9178;
+}
+
+/* Ensure editor is padded above the chat bar */
+.editor-container {
+  flex: 1;
+  background-color: #1e1e1e;
+}
