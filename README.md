@@ -36,10 +36,12 @@ ollama pull nomic-embed-text
 ```bash
 wails dev
 ```
+*(Note: If the `wails` command is not found, you may need to use the explicit Go path: `~/go/bin/wails dev`)*
 
-To easily build a native macOS/Windows `.app` or `.exe` binary:
+To easily build a native macOS or Windows app binary:
 ```bash
 wails build
+# Or: ~/go/bin/wails build
 ```
 
 ---
