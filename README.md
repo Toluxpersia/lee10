@@ -1,16 +1,16 @@
 # lee10 💡
 
-**lee10** is a vibe coded AI-native desktop code editor built to demonstrate the idea of interactive/collaborative coding. intelligence. 
+**lee10** is a vibe coded,very bare-bones AI-native desktop code editor built to demonstrate interactive and collaborative coding. 
 
-Instead of routing your codebase through the cloud, lee10 uses a custom **Go-based intelligence backend** and **Ollama** to analyze, chat, and coach you locally on your machine.
+
+The main idea is to provide a seamless coding experience where the AI is always aware of your codebase. It observes as you type and does not auto-complete code or offer complete code suggestions. Instead, it offers insights and conversational advice based on your current code block. When the user needs help, they can ask the AI through the chat bar and receive a response based on their current code and the context of their codebase. This system is powered by a local vector database that stores the embeddings of the codebase. Instead of routing your codebase through the cloud, lee10 uses a local Gemma 2:9B model via Ollama for analysis. This setup ultimately delivers a seamless coding experience where the AI always knows your codebase and can provide insights and suggestions, keeping the developer in control and preventing knowledge atrophy over time through autocomplete and direct code suggestions.
+
 
 ![lee10 Screenshot](docs/screenshot.png) *(Add a screenshot here!)*
 
 ## ✨ Features
-- **100% Privacy & Local LLM**: Powered natively by your machine. Runs `qwen2.5-coder` for offline, instantaneous code generation and logic analysis.
-- **On-Demand Interactive Chat Coach**: The AI doesn't just auto-complete code. When you pause typing, the background observer dynamically reads the architecture surrounding your cursor and pipes conversational advice directly into your Chat Bar, acting as an AI mentor exactly when you need it.
-- **Sleek Glassmorphic UI**: Powered by React, Vite, and Wails, featuring a gorgeous floating chat bar and deep Monaco Editor integration.
-
+- **100% Privacy & Local LLM**: Powered natively by your machine. Runs Gemma 2:9B for offline, instantaneous code generation and logic analysis.
+- **On-Demand Interactive Chat Coach**: The AI doesn't just auto-complete code. When you pause typing, the background observer dynamically reads the architecture surrounding your cursor and pipes conversational advice, acting as an AI mentor exactly when you need it.
 ---
 
 ## 🚀 Getting Started
@@ -24,7 +24,7 @@ Instead of routing your codebase through the cloud, lee10 uses a custom **Go-bas
 ### Setup AI Models
 lee10 relies on these specific code-focused models running natively on Ollama:
 ```bash
-ollama run qwen2.5-coder:1.5b
+ollama run gemma2:9b
 ollama pull nomic-embed-text
 ```
 
@@ -47,17 +47,8 @@ wails build
 
 ## 🛠 Tech Stack
 - **Backend Shell**: Go + Wails
-- **Intelligence**: Native HTTP Go-routines binding directly to Ollama REST endpoints (Qwen & Nomic)
+- **Intelligence**: Native HTTP Go-routines binding directly to Ollama REST endpoints (Gemma & Nomic)
 - **Frontend Layer**: React + TypeScript + Monaco Editor + React Markdown
-
-## 🤝 Contributing
-Contributions are extremely welcome! lee10 has massive potential, from adding multi-tab support, to rebuilding a robust and highly-efficient local workspace RAG indexer!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
 ## License
 Distributed under the MIT License. See `LICENSE` for more information.
