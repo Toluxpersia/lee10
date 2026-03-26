@@ -96,7 +96,9 @@ body, html {
   z-index: 1000;
   top: 25px;
   right: 25px;
-  width: 380px;
+  width: fit-content;
+  min-width: 250px;
+  max-width: 450px;
   background: linear-gradient(135deg, rgba(45, 45, 50, 0.88), rgba(25, 25, 30, 0.96));
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -195,7 +197,8 @@ body, html {
   bottom: 0px; /* Docked right above the input bar natively layout */
   left: 0;
   right: 0;
-  height: 350px;
+  height: fit-content;
+  min-height: 100px;
   max-height: 50vh;
   
   background-color: rgba(30, 30, 30, 0.96);
