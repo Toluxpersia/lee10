@@ -5,8 +5,6 @@
 The main idea is to provide a seamless coding experience where the AI is always aware of your codebase. It observes as you type and does not auto-complete code or offer complete code suggestions. Instead, it offers insights and conversational advice based on your current code block. When the user needs help, they can ask the AI through the chat bar and receive a response based on their current code and the context of their codebase. This system is powered by a local vector database that stores the embeddings of the codebase. Instead of routing your codebase through the cloud, lee10 uses a local Gemma 2:9B model via Ollama for analysis. This setup ultimately delivers a seamless coding experience where the AI always knows your codebase and can provide insights and suggestions, keeping the developer in control and preventing knowledge atrophy over time through autocomplete and direct code suggestions.
 
 
-![lee10 Screenshot](docs/screenshot.png) *(Add a screenshot here!)*
-
 ## ✨ Features
 - **100% Privacy & Local LLM**: Powered natively by your machine. Runs Gemma 2:9B for offline, instantaneous code generation and logic analysis.
 - **On-Demand Interactive Chat Coach**: The AI doesn't just auto-complete code. When you pause typing, the background observer dynamically reads the architecture surrounding your cursor and pipes conversational advice, acting as an AI mentor exactly when you need it.
