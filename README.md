@@ -21,10 +21,11 @@ Instead of routing your codebase through the cloud, lee10 uses a custom **Go-bas
 3. **[Ollama](https://ollama.com)** (For Local AI)
 4. **[Wails CLI](https://wails.io/docs/gettingstarted/installation)** (`go install github.com/wailsapp/wails/v2/cmd/wails@latest`)
 
-### Setup AI Model
-lee10 relies on this specific code-focused model running on Ollama:
+### Setup AI Models
+lee10 relies on these specific code-focused models running natively on Ollama:
 ```bash
 ollama run qwen2.5-coder:1.5b
+ollama pull nomic-embed-text
 ```
 
 ### Installation
@@ -46,8 +47,8 @@ wails build
 
 ## 🛠 Tech Stack
 - **Backend Shell**: Go + Wails
-- **Intelligence**: Native HTTP Go-routines binding directly to Ollama REST endpoints
-- **Frontend Layer**: React + TypeScript + Monaco Editor
+- **Intelligence**: Native HTTP Go-routines binding directly to Ollama REST endpoints (Qwen & Nomic)
+- **Frontend Layer**: React + TypeScript + Monaco Editor + React Markdown
 
 ## 🤝 Contributing
 Contributions are extremely welcome! lee10 has massive potential, from adding multi-tab support, to rebuilding a robust and highly-efficient local workspace RAG indexer!
