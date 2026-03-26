@@ -1,14 +1,14 @@
 # lee10 💡
 
-**lee10** is an AI-native desktop code editor built from the ground up for interactive intelligence. 
+**lee10** is a vibe coded AI-native desktop code editor built to demonstrate the idea of interactive/collaborative coding. intelligence. 
 
-Instead of routing your codebase through the cloud, lee10 uses a custom **Go-based native Vector Indexer** and **Ollama** to analyze, chat, and coach you locally on your machine.
+Instead of routing your codebase through the cloud, lee10 uses a custom **Go-based intelligence backend** and **Ollama** to analyze, chat, and coach you locally on your machine.
 
 ![lee10 Screenshot](docs/screenshot.png) *(Add a screenshot here!)*
 
 ## ✨ Features
 - **100% Privacy & Local LLM**: Powered natively by your machine. Runs `qwen2.5-coder` for offline, instantaneous code generation and logic analysis.
-- **On-Demand Interactive Code Coach**: The Insight Box doesn't just auto-complete code; it dynamically reads the surrounding architecture of any text you explicitly highlight with your cursor and acts as a conversational AI mentor popping up exactly when you need it.
+- **On-Demand Interactive Chat Coach**: The AI doesn't just auto-complete code. When you pause typing, the background observer dynamically reads the architecture surrounding your cursor and pipes conversational advice directly into your Chat Bar, acting as an AI mentor exactly when you need it.
 - **Sleek Glassmorphic UI**: Powered by React, Vite, and Wails, featuring a gorgeous floating chat bar and deep Monaco Editor integration.
 
 ---
@@ -46,11 +46,11 @@ wails build
 
 ## 🛠 Tech Stack
 - **Backend Shell**: Go + Wails
-- **Vector Math**: Custom `rag.go` Cosine Similarity engine mapping Ollama HTTP embeddings
+- **Intelligence**: Native HTTP Go-routines binding directly to Ollama REST endpoints
 - **Frontend Layer**: React + TypeScript + Monaco Editor
 
 ## 🤝 Contributing
-Contributions are extremely welcome! lee10 has massive potential, from adding multi-tab support, to implementing AST tree-sitter parsing for perfectly chunked embedding vectors!
+Contributions are extremely welcome! lee10 has massive potential, from adding multi-tab support, to rebuilding a robust and highly-efficient local workspace RAG indexer!
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
