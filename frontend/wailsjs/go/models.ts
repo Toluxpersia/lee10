@@ -36,6 +36,20 @@ export namespace main {
 		    return a;
 		}
 	}
+	export class SuggestionResponse {
+	    has_issues: boolean;
+	    coach_message: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new SuggestionResponse(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.has_issues = source["has_issues"];
+	        this.coach_message = source["coach_message"];
+	    }
+	}
 
 }
 

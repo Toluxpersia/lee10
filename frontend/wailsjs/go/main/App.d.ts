@@ -6,7 +6,7 @@ export function CreateFile(arg1:string,arg2:string):Promise<string>;
 
 export function GetChatResponse(arg1:string,arg2:string):Promise<string>;
 
-export function GetSuggestion(arg1:string,arg2:string,arg3:number):Promise<string>;
+export function GetCoachInsight(arg1:string,arg2:string,arg3:number):Promise<main.SuggestionResponse>;
 
 export function OpenFolder():Promise<main.FileNode>;
 
@@ -15,5 +15,3 @@ export function ReadFile(arg1:string):Promise<string>;
 export function ReadFolder(arg1:string):Promise<main.FileNode>;
 
 export function SaveFile(arg1:string,arg2:string):Promise<void>;
-
-export function UpdateFileIndex(arg1:string,arg2:string):Promise<void>;

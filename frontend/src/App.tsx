@@ -1,13 +1,15 @@
-import { useState, useEffect, useRef } from 'react';
-import Editor, { useMonaco, Monaco } from '@monaco-editor/react';
+import { useState, useRef, useEffect } from 'react';
+import Editor, { Monaco } from "@monaco-editor/react";
 import './App.css';
-import { OpenFolder, ReadFile, SaveFile, GetSuggestion, CreateFile, ReadFolder, GetChatResponse } from "../wailsjs/go/main/App";
+import { OpenFolder, ReadFile, SaveFile, CreateFile, ReadFolder, GetChatResponse, GetCoachInsight } from "../wailsjs/go/main/App";
 import { main } from "../wailsjs/go/models";
 
 let editorMounted = false;
+const activeInsightsMap = new Map<number, string>();
+let decoratorsRef: string[] = [];
 
 function App() {
-  const [code, setCode] = useState('// Welcome to Liten AI Editor\n');
+  const [code, setCode] = useState('// Welcome to lee10 AI Editor\n');
   const [fileTree, setFileTree] = useState<main.FileNode | null>(null);
   const [activeFile, setActiveFile] = useState<string | null>(null);
   const [aiSuggestion, setAiSuggestion] = useState<string | null>(null);
@@ -18,9 +20,11 @@ function App() {
   const [chatHistory, setChatHistory] = useState<{role: string, text: string}[]>([]);
   const [isChatting, setIsChatting] = useState(false);
   const editorRef = useRef<any>(null);
+  const monacoRef = useRef<any>(null);
 
   function handleEditorMount(editor: any, monaco: Monaco) {
     editorRef.current = editor;
+    monacoRef.current = monaco;
     editorMounted = true;
   }
 
@@ -45,13 +49,39 @@ function App() {
               return;
           }
           const currentLine = model.getLineContent(position.lineNumber);
-          const fullCode = model.getValue();
-
-          const suggestion = await GetSuggestion(fullCode, currentLine, position.lineNumber);
-          if (suggestion && suggestion.trim() !== "OK" && suggestion.trim() !== "") {
-            setAiSuggestion(suggestion.trim());
-          } else {
-            setAiSuggestion(null); // Clear it if the code is now OK
+          
+          // Get a localized block of code around the cursor (10 lines before and after)
+          const startLine = Math.max(1, position.lineNumber - 10);
+          const endLine = Math.min(model.getLineCount(), position.lineNumber + 10);
+          const blockContent = model.getValueInRange({
+            startLineNumber: startLine,
+            startColumn: 1,
+            endLineNumber: endLine,
+            endColumn: model.getLineMaxColumn(endLine)
+          });
+          
+          const insight = await GetCoachInsight(blockContent, currentLine, position.lineNumber);
+          
+          if (insight && insight.has_issues && insight.coach_message) {
+            // Track the message internally
+            activeInsightsMap.set(position.lineNumber, insight.coach_message);
+            
+            // Pipe the Coach's advice directly into the real-time AI Chat Panel instead of fighting Webkit Canvas DOM!
+            setChatHistory(prev => [
+                ...prev, 
+                {role: 'ai', text: `💡 *Line ${position.lineNumber}:* ${insight.coach_message}`}
+            ]);
+            
+            // Auto-open chat if hidden by turning it "on" logically via state
+            setIsChatting(false);
+            
+            // Erase any old Monaco markers just in case
+            if (monacoRef.current && editorRef.current) {
+                const model = editorRef.current.getModel();
+                if (model) {
+                    monacoRef.current.editor.setModelMarkers(model, "ai-coach", []);
+                }
+            }
           }
         }
       } catch (err) {
@@ -190,7 +220,7 @@ function App() {
     <div className="layout">
       <div className="sidebar">
         <div className="sidebar-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span className="title">Liten</span>
+          <span className="title">lee10</span>
           <div style={{ display: 'flex', gap: '8px' }}>
             <button onClick={() => { setIsCreatingFile(true); setNewFileName(""); }} title="New File" style={{ background: 'none', border: 'none', color: '#007acc', cursor: 'pointer', fontSize: '12px', padding: '0' }}>➕</button>
             <button onClick={handleOpenFolder} title="Open Folder" style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '12px', padding: '0' }}>📂</button>
@@ -245,7 +275,7 @@ function App() {
         {aiSuggestion && (
           <div className="ai-suggestion-box">
             <div className="ai-header">
-              <span>✨ Liten Insight</span>
+              <span>✨ lee10 Insight</span>
               <button className="ai-dismiss" onClick={() => setAiSuggestion(null)}>×</button>
             </div>
             <div className="ai-content">{aiSuggestion}</div>
@@ -256,13 +286,13 @@ function App() {
         {chatHistory.length > 0 && (
            <div className="chat-panel">
               <div className="chat-header">
-                <span>💬 Liten Chat</span>
+                <span>💬 lee10 Chat</span>
                 <button onClick={() => setChatHistory([])}>Clear</button>
               </div>
               <div className="chat-messages">
                 {chatHistory.map((msg, i) => (
                   <div key={i} className={`chat-message ${msg.role}`}>
-                    <strong>{msg.role === 'user' ? 'You' : 'AI'}: </strong>
+                    <strong>{msg.role === 'user' ? 'You' : 'lee10'}: </strong>
                     <span>{msg.text}</span>
                   </div>
                 ))}
@@ -279,7 +309,7 @@ function App() {
               value={chatInput}
               onChange={e => setChatInput(e.target.value)}
               onKeyDown={handleAskLLM}
-              placeholder="Ask Liten AI about this code... (Press Enter)"
+              placeholder="Ask lee10 about this code... (Press Enter)"
            />
         </div>
       </div>

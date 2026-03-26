@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
-	"fmt"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
@@ -16,6 +16,12 @@ type OllamaRequest struct {
 	Model  string `json:"model"`
 	Prompt string `json:"prompt"`
 	Stream bool   `json:"stream"`
+	Format string `json:"format,omitempty"`
+}
+
+type SuggestionResponse struct {
+	HasIssues    bool   `json:"has_issues"`
+	CoachMessage string `json:"coach_message"`
 }
 
 type Upvote struct {
@@ -36,8 +42,6 @@ type FileNode struct {
 
 type App struct {
 	ctx        context.Context
-	Workspace  []DocumentChunk
-	IsIndexing bool
 }
 
 func NewApp() *App {
@@ -48,62 +52,75 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-func (a *App) GetSuggestion(code, lineContent string, lineNumber int) string {
-	prompt := fmt.Sprintf(`You are an interactive AI code editor assistant. 
-Analyze the following code. The user is currently typing on line %d, which contains: %s
+func (a *App) GetCoachInsight(blockContent, currentLineContent string, lineNumber int) *SuggestionResponse {
+	prompt := fmt.Sprintf(`You are an expert AI code coach analyzing a snippet.
+The user is currently typing on line %d:
+`+"`%s`"+`
 
-If you notice any syntax mistakes, bad practices, edge cases, or inefficiencies near line %d, concisely point out the issue and suggest how to improve it.
-Do NOT write the code solutions yourself. Be a conversational coach. Focus only on mistakes or improvements. Keep your response extremely short (1-3 sentences max). 
-If the code looks perfectly fine and there are no immediate issues or algorithm improvements, you MUST return the exact string 'OK'. Do not say anything else.
+Full context block:
+`+"```"+`
+%s
+`+"```"+`
 
-Code:
-%s`, lineNumber, lineContent, lineNumber, code)
+You MUST reply with ONLY a JSON object and nothing else. No markdown formatting.
+If the code has no major architectural issues or bad practices, return:
+{"has_issues": false, "coach_message": "OK"}
 
+If there is a bad practice, edge case, or inefficiency, briefly suggest an improvement (1-2 sentences) without writing code:
+{"has_issues": true, "coach_message": "Your coaching message here."}`, lineNumber, currentLineContent, blockContent)
 
 	reqBody := OllamaRequest{
-		Model:  "qwen2.5-coder:1.5b", 
+		Model:  "gemma2:9b",
 		Prompt: prompt,
 		Stream: false,
+		Format: "json", // Enforce JSON mode natively in Ollama!
 	}
 	body, _ := json.Marshal(reqBody)
 
 	resp, err := http.Post("http://localhost:11434/api/generate", "application/json", bytes.NewBuffer(body))
 	if err != nil {
 		fmt.Println("Ollama Error:", err)
-		return ""
+		return nil
 	}
 	defer resp.Body.Close()
 
 	var ollamaResp OllamaResponse
 	if err := json.NewDecoder(resp.Body).Decode(&ollamaResp); err != nil {
 		fmt.Println("Decode Error:", err)
-		return ""
+		return nil
 	}
-	return ollamaResp.Response
+
+	rawResp := ollamaResp.Response
+	// Clean up any markdown json blocks that instruct models hallucinate
+	if len(rawResp) > 7 && rawResp[:7] == "```json" {
+		rawResp = rawResp[7:]
+	} else if len(rawResp) > 3 && rawResp[:3] == "```" {
+		rawResp = rawResp[3:]
+	}
+	if len(rawResp) > 3 && rawResp[len(rawResp)-3:] == "```" {
+		rawResp = rawResp[:len(rawResp)-3]
+	}
+
+	fmt.Println("--- Gemma2 Insight Check ---")
+	fmt.Println("Raw JSON String:", rawResp)
+
+	var insight SuggestionResponse
+	if err := json.Unmarshal([]byte(rawResp), &insight); err != nil {
+		fmt.Println("JSON Parse Error. Raw output was:", ollamaResp.Response, "| Err:", err)
+		return nil
+	}
+	
+	return &insight
 }
 
 func (a *App) GetChatResponse(userPrompt, code string) string {
-	// RAG Integration: Retrieve context if embeddings work
-	var contextString string
-	queryVector, embedErr := GenerateEmbedding(userPrompt)
-	if embedErr == nil && len(a.Workspace) > 0 {
-		topChunks := RetrieveContext(queryVector, a.Workspace, 3)
-		if len(topChunks) > 0 {
-			contextString = "Here are related code snippets from other files in the user's workspace:\n\n"
-			for _, chunk := range topChunks {
-				contextString += fmt.Sprintf("File: %s\n```\n%s\n```\n\n", chunk.FilePath, chunk.Content)
-			}
-		}
-	}
-
-	prompt := fmt.Sprintf(`You are an expert AI coding assistant built into the Liten Editor.
+	prompt := fmt.Sprintf(`You are an expert AI coding assistant built into the lee10 Editor.
 The user asked you a direct question: "%s"
 
 Here is their current active file code for context:
 %s
 
-%s
-Please provide a concise, helpful, and direct answer.`, userPrompt, code, contextString)
+Please provide a concise, helpful, and direct answer.`, userPrompt, code)
 
 	reqBody := OllamaRequest{
 		Model:  "qwen2.5-coder:1.5b",
@@ -135,20 +152,6 @@ func (a *App) OpenFolder() *FileNode {
 		return nil
 	}
 
-	// Trigger Background Vector Indexer
-	go func() {
-		a.IsIndexing = true
-		fmt.Println("Indexing workspace vectors for RAG:", dir)
-		chunks, err := IndexWorkspace(dir)
-		if err == nil {
-			a.Workspace = chunks
-			fmt.Println("RAG Indexer successful! Stored", len(chunks), "document chunk vectors.")
-		} else {
-			fmt.Println("RAG Indexer failed:", err)
-		}
-		a.IsIndexing = false
-	}()
-
 	return a.buildFileTree(dir)
 }
 
@@ -161,32 +164,7 @@ func (a *App) ReadFile(path string) (string, error) {
 }
 
 func (a *App) SaveFile(path string, content string) error {
-	err := os.WriteFile(path, []byte(content), 0644)
-	if err == nil {
-		go a.UpdateFileIndex(path, content)
-	}
-	return err
-}
-
-func (a *App) UpdateFileIndex(path, content string) {
-	// Safely clear old chunks for this file and recreate
-	var newWorkspace []DocumentChunk
-	for _, chunk := range a.Workspace {
-		if chunk.FilePath != path {
-			newWorkspace = append(newWorkspace, chunk)
-		}
-	}
-
-	chunks := ChunkString(content, path, 1500)
-	for _, chunk := range chunks {
-		vector, embedErr := GenerateEmbedding(chunk.Content)
-		if embedErr == nil && vector != nil {
-			chunk.Vector = vector
-			newWorkspace = append(newWorkspace, chunk)
-		}
-	}
-	a.Workspace = newWorkspace
-	fmt.Println("Dynamically re-indexed saved file:", path)
+	return os.WriteFile(path, []byte(content), 0644)
 }
 
 func (a *App) CreateFile(baseDir, name string) (string, error) {

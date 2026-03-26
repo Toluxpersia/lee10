@@ -150,7 +150,6 @@ body, html {
   font-weight: 600;
 }
 
-/* Chat Input Bar */
 .chat-input-container {
   padding: 10px 15px;
   background-color: #1e1e1e;
@@ -176,38 +175,53 @@ body, html {
 /* Chat Panel */
 .chat-panel {
   position: absolute;
-  bottom: 15px;
-  left: 15px;
-  right: 15px;
-  max-height: 400px;
-  background-color: #252526;
-  border: 1px solid #454545;
-  border-radius: 6px;
+  top: 25px;
+  right: 25px;
+  left: auto;
+  bottom: auto;
+  width: 360px;
+  min-height: 150px;
+  max-height: 500px;
+  
+  /* The Fun Cloud "Squishy Bubble" Shape! */
+  border-radius: 60px 60px 15px 60px;
+  
+  background: linear-gradient(135deg, rgba(45, 45, 50, 0.85), rgba(25, 25, 30, 0.95));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 3px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
   z-index: 500;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+  overflow: hidden;
 }
 .chat-header {
-  padding: 10px 15px;
-  background: #333333;
+  padding: 20px 25px 10px 25px;
+  background: transparent;
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #454545;
-  font-size: 13px;
-  font-weight: 500;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.5px;
 }
 .chat-header button {
-  background: none;
+  background: rgba(255, 255, 255, 0.1);
   border: none;
-  color: #cccccc;
+  color: #fff;
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 11px;
   cursor: pointer;
+  transition: background 0.2s;
 }
 .chat-header button:hover {
-  color: #fff;
+  background: rgba(255, 255, 255, 0.25);
 }
 .chat-messages {
-  padding: 15px;
+  padding: 15px 25px 25px 25px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;

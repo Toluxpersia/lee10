@@ -10,8 +10,8 @@ export function GetChatResponse(arg1, arg2) {
   return window['go']['main']['App']['GetChatResponse'](arg1, arg2);
 }
 
-export function GetSuggestion(arg1, arg2, arg3) {
-  return window['go']['main']['App']['GetSuggestion'](arg1, arg2, arg3);
+export function GetCoachInsight(arg1, arg2, arg3) {
+  return window['go']['main']['App']['GetCoachInsight'](arg1, arg2, arg3);
 }
 
 export function OpenFolder() {
@@ -28,8 +28,4 @@ export function ReadFolder(arg1) {
 
 export function SaveFile(arg1, arg2) {
   return window['go']['main']['App']['SaveFile'](arg1, arg2);
-}
-
-export function UpdateFileIndex(arg1, arg2) {
-  return window['go']['main']['App']['UpdateFileIndex'](arg1, arg2);
 }
