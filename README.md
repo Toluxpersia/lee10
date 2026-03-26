@@ -1,7 +1,6 @@
 # lee10 💡
 
-**lee10** is a vibe coded,very bare-bones AI-native desktop code editor built to demonstrate interactive and collaborative coding. 
-
+**lee10** is a vibe coded, very bare-bones AI-native desktop code editor built to demonstrate interactive and collaborative coding. 
 
 The main idea is to provide a seamless coding experience where the AI is always aware of your codebase. It observes as you type and does not auto-complete code or offer complete code suggestions. Instead, it offers insights and conversational advice based on your current code block. When the user needs help, they can ask the AI through the chat bar and receive a response based on their current code and the context of their codebase. This system is powered by a local vector database that stores the embeddings of the codebase. Instead of routing your codebase through the cloud, lee10 uses a local Gemma 2:9B model via Ollama for analysis. This setup ultimately delivers a seamless coding experience where the AI always knows your codebase and can provide insights and suggestions, keeping the developer in control and preventing knowledge atrophy over time through autocomplete and direct code suggestions.
 
