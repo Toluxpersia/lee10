@@ -4,6 +4,8 @@ import {main} from '../models';
 
 export function CreateFile(arg1:string,arg2:string):Promise<string>;
 
+export function EnsureIndex():Promise<boolean>;
+
 export function GetChatResponse(arg1:string,arg2:string):Promise<string>;
 
 export function GetCoachInsight(arg1:string,arg2:string,arg3:number):Promise<main.SuggestionResponse>;

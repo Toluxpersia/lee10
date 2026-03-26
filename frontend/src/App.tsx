@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import Editor, { Monaco } from "@monaco-editor/react";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import './App.css';
-import { OpenFolder, ReadFile, SaveFile, CreateFile, ReadFolder, GetChatResponse, GetCoachInsight } from "../wailsjs/go/main/App";
+import { OpenFolder, ReadFile, SaveFile, CreateFile, ReadFolder, GetChatResponse, GetCoachInsight, EnsureIndex } from "../wailsjs/go/main/App";
 import { main } from "../wailsjs/go/models";
 
 let editorMounted = false;
@@ -66,14 +68,13 @@ function App() {
             // Track the message internally
             activeInsightsMap.set(position.lineNumber, insight.coach_message);
             
-            // Pipe the Coach's advice directly into the real-time AI Chat Panel instead of fighting Webkit Canvas DOM!
-            setChatHistory(prev => [
-                ...prev, 
-                {role: 'ai', text: `💡 *Line ${position.lineNumber}:* ${insight.coach_message}`}
-            ]);
+            // Show the Insight Cloud!
+            setAiSuggestion(`Line ${position.lineNumber}:\n\n${insight.coach_message}`);
             
-            // Auto-open chat if hidden by turning it "on" logically via state
-            setIsChatting(false);
+            // Auto-hide the cloud after 10 seconds
+            setTimeout(() => {
+                setAiSuggestion(null);
+            }, 10000);
             
             // Erase any old Monaco markers just in case
             if (monacoRef.current && editorRef.current) {
@@ -293,7 +294,15 @@ function App() {
                 {chatHistory.map((msg, i) => (
                   <div key={i} className={`chat-message ${msg.role}`}>
                     <strong>{msg.role === 'user' ? 'You' : 'lee10'}: </strong>
-                    <span>{msg.text}</span>
+                    {msg.role === 'user' ? (
+                       <span>{msg.text}</span>
+                    ) : (
+                       <div className="markdown-body">
+                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                               {msg.text}
+                           </ReactMarkdown>
+                       </div>
+                    )}
                   </div>
                 ))}
                 {isChatting && <div className="chat-message ai"><em>Thinking...</em></div>}
@@ -308,6 +317,7 @@ function App() {
               className="chat-input"
               value={chatInput}
               onChange={e => setChatInput(e.target.value)}
+              onFocus={() => { EnsureIndex(); }}
               onKeyDown={handleAskLLM}
               placeholder="Ask lee10 about this code... (Press Enter)"
            />

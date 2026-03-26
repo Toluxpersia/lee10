@@ -114,13 +114,18 @@ If there is a bad practice, edge case, or inefficiency, briefly suggest an impro
 }
 
 func (a *App) GetChatResponse(userPrompt, code string) string {
+	contextString := RetrieveContext(userPrompt)
+
 	prompt := fmt.Sprintf(`You are an expert AI coding assistant built into the lee10 Editor.
 The user asked you a direct question: "%s"
 
 Here is their current active file code for context:
 %s
 
-Please provide a concise, helpful, and direct answer.`, userPrompt, code)
+Additional Workspace Context automatically retrieved via Vector RAG Database for cross-file architecture awareness:
+%s
+
+Please provide a concise, helpful, and direct answer formatted elegantly in Markdown.`, userPrompt, code, contextString)
 
 	reqBody := OllamaRequest{
 		Model:  "qwen2.5-coder:1.5b",
@@ -151,6 +156,14 @@ func (a *App) OpenFolder() *FileNode {
 	if err != nil || dir == "" {
 		return nil
 	}
+
+	// Set global CurrentFolder for RAG tracking
+	CurrentFolder = dir
+	
+	// Reset the Vector Index natively when switching folders!
+	indexMutex.Lock()
+	WorkspaceIndex = nil
+	indexMutex.Unlock()
 
 	return a.buildFileTree(dir)
 }

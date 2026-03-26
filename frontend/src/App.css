@@ -94,45 +94,62 @@ body, html {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   color: #e0e0e0;
   z-index: 1000;
+  top: 25px;
+  right: 25px;
+  width: 380px;
+  background: linear-gradient(135deg, rgba(45, 45, 50, 0.88), rgba(25, 25, 30, 0.96));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 15px 45px rgba(0,0,0,0.6);
+  z-index: 999;
   overflow: hidden;
-  animation: slideIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  
+  /* The Fun Cloud "Squishy Bubble" Shape! */
+  border-radius: 60px 60px 15px 60px;
+  
+  animation: slideInFade 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes slideInFade {
+  from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .ai-header {
+  padding: 20px 25px 5px 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(147, 51, 234, 0.15);
-  color: #d8b4fe;
-  padding: 10px 14px;
+  font-weight: 700;
+  color: #a3a3a3;
+  letter-spacing: 0.5px;
   font-size: 13px;
-  font-weight: 600;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  text-transform: uppercase;
 }
-
 .ai-dismiss {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.1);
   border: none;
-  color: #ffffff;
+  color: #fff;
   cursor: pointer;
-  font-size: 16px;
-  line-height: 1;
-  opacity: 0.8;
+  border-radius: 12px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
 }
-
 .ai-dismiss:hover {
-  opacity: 1;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .ai-content {
-  padding: 15px;
-  font-size: 13.5px;
+  padding: 10px 25px 25px 25px;
+  color: #fff;
+  font-size: 14px;
   line-height: 1.6;
+  font-weight: 500;
   white-space: pre-wrap;
 }
 
@@ -172,60 +189,86 @@ body, html {
   border-color: #007acc;
 }
 
-/* Chat Panel */
+/* Chat Panel - Normal Box Docked to the Bottom */
 .chat-panel {
   position: absolute;
-  top: 25px;
-  right: 25px;
-  left: auto;
-  bottom: auto;
-  width: 360px;
-  min-height: 150px;
-  max-height: 500px;
+  bottom: 0px; /* Docked right above the input bar natively layout */
+  left: 0;
+  right: 0;
+  height: 350px;
+  max-height: 50vh;
   
-  /* The Fun Cloud "Squishy Bubble" Shape! */
-  border-radius: 60px 60px 15px 60px;
-  
-  background: linear-gradient(135deg, rgba(45, 45, 50, 0.85), rgba(25, 25, 30, 0.95));
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 3px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(30, 30, 30, 0.96);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid #3c3c3c;
   display: flex;
   flex-direction: column;
   z-index: 500;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.6);
   overflow: hidden;
+  box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
 }
+
 .chat-header {
-  padding: 20px 25px 10px 25px;
-  background: transparent;
+  padding: 10px 15px;
+  background: #252526;
   display: flex;
   justify-content: space-between;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.05);
-  font-size: 15px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.5px;
+  border-bottom: 1px solid #3c3c3c;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ccc;
 }
 .chat-header button {
-  background: rgba(255, 255, 255, 0.1);
+  background: transparent;
   border: none;
-  color: #fff;
-  border-radius: 12px;
-  padding: 4px 10px;
-  font-size: 11px;
+  color: #007acc;
+  padding: 2px 8px;
+  font-size: 12px;
   cursor: pointer;
-  transition: background 0.2s;
 }
 .chat-header button:hover {
-  background: rgba(255, 255, 255, 0.25);
+  text-decoration: underline;
+  color: #56b6c2;
 }
 .chat-messages {
-  padding: 15px 25px 25px 25px;
+  padding: 15px 20px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+/* Markdown in Chat */
+.markdown-body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #eeeeee;
+  margin-top: 4px;
+}
+.markdown-body code {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', Courier, monospace;
+}
+.markdown-body pre {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  border: 1px solid rgba(255,255,255,0.08);
+  margin: 10px 0;
+}
+.markdown-body pre code {
+  background: transparent;
+  padding: 0;
+}
+.markdown-body p {
+  margin: 6px 0;
+}
+.markdown-body ul, .markdown-body ol {
+  padding-left: 20px;
+  margin: 8px 0;
 }
 .chat-message {
   font-size: 13px;

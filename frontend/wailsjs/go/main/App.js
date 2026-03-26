@@ -6,6 +6,10 @@ export function CreateFile(arg1, arg2) {
   return window['go']['main']['App']['CreateFile'](arg1, arg2);
 }
 
+export function EnsureIndex() {
+  return window['go']['main']['App']['EnsureIndex']();
+}
+
 export function GetChatResponse(arg1, arg2) {
   return window['go']['main']['App']['GetChatResponse'](arg1, arg2);
 }
