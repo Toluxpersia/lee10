@@ -1,3 +1,5 @@
+https://github.com/user-attachments/assets/1ce46c77-0005-4d41-b1bf-29930eb022ab
+
 # lee10 💡
 
 **lee10** is a vibe coded, very bare-bones AI-native desktop code editor built to demonstrate interactive and collaborative coding. 
