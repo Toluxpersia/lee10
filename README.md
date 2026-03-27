@@ -1,51 +1,55 @@
 # lee10 💡
 
-**lee10** is a vibe coded, very bare-bones AI-native desktop code editor built to demonstrate interactive and collaborative coding. 
+**lee10** is an incredibly robust, ultra-lightweight AI-native Code Editor Extension explicitly designed to integrate natively inside Visual Studio Code.
 
-The main idea is to provide a seamless coding experience where the AI is always aware of your codebase. It observes as you type and does not auto-complete code or offer complete code suggestions. Instead, it offers insights and conversational advice based on your current code block. When the user needs help, they can ask the AI through the chat bar and receive a response based on their current code and the context of their codebase. This system is powered by a local vector database that stores the embeddings of the codebase. Instead of routing your codebase through the cloud, lee10 uses a local Gemma 2:9B model via Ollama for analysis. This setup ultimately delivers a seamless coding experience where the AI always knows your codebase and can provide insights and suggestions, keeping the developer in control and preventing knowledge atrophy over time through autocomplete and direct code suggestions.
+Rather than actively auto-completing templates blindly against your cursor, `lee10` operates exclusively as an **Architecture Coach**. It leverages a fully encapsulated React Webview Sidebar bridging perfectly into a Dual-Engine LLM topology, intelligently tracking your structural code dependencies natively via pure compiler AST traces!
 
+---
 
-## ✨ Features
-- **100% Privacy & Local LLM**: Powered natively by your machine. Runs Gemma 2:9B for offline, instantaneous code generation and logic analysis.
-- **On-Demand Interactive Chat Coach**: The AI doesn't just auto-complete code. When you pause typing, the background observer dynamically reads the architecture surrounding your cursor and pipes conversational advice, acting as an AI mentor exactly when you need it.
+## ✨ Advanced Features
+- **Compiler Native LSP AST:** Unlike generic RAG models parsing vectors randomly, `lee10` explicitly extracts your chat keywords connecting securely into the `tsc` or `gopls` underlying Language Server. It fetches 100% physically exact code definitions across your workspace eliminating AI hallucination!
+- **Dual Neural Routing:** Choose mathematically strict 100% Private Offline Inference hitting `Gemma 2:9B / Ollama`, or swap seamlessly to Premium Cloud Next-Gen Models (OpenAI GPT-5, Anthropic Sonnet 3.5, Google Gemini 3 Flash). 
+- **SecretStorage Key Enclave:** Cloud API Keys are completely purged from generic `settings.json` limits! `lee10` leverages natively encrypted OS-level `vscode.secrets` vault arrays safely keeping tokens locked behind dynamic React placeholders (`••••••••`).
+- **Passive Code Insight:** As you type, `lee10` analyzes code architectures silently dropping non-intrusive beautiful Code Insight native `hoverCards` exactly over your lines allowing 1-click execution straight into the Chat Webview!
+
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-1. **[Go](https://go.dev/doc/install)** (1.18+)
-2. **[Node.js](https://nodejs.org)** (18+)
-3. **[Ollama](https://ollama.com)** (For Local AI)
-4. **[Wails CLI](https://wails.io/docs/gettingstarted/installation)** (`go install github.com/wailsapp/wails/v2/cmd/wails@latest`)
+1. **[Node.js](https://nodejs.org)** (v18+)
+2. **VS Code** (v1.80+)
+3. **[Ollama](https://ollama.com)** (Required ONLY if running the 100% Local Inference Engine)
 
-### Setup AI Models
-lee10 relies on these specific code-focused models running natively on Ollama:
-```bash
-ollama run gemma2:9b
-ollama pull nomic-embed-text
-```
+### Installing from Source
+1. Clone the repository natively.
+2. Enter the VS Code extension sub-directory:
+   ```bash
+   cd lee10VS
+   npm install
+   ```
+3. Boot the local Extension Development Host:
+   ```bash
+   # Press F5 dynamically inside the VS Code editor to spawn a compiled debugger clone natively!
+   ```
 
-### Installation
-1. Clone the repository: `git clone https://github.com/yourusername/lee10.git`
-2. Enter the directory: `cd lee10`
-3. Run the development server (auto-compiles frontend and backend):
+### Publishing & Deployment
+To physically build the immutable package representing the Production Visual Studio instance, compile via VSCE CLI:
 ```bash
-wails dev
-```
-*(Note: If the `wails` command is not found, you may need to use the explicit Go path: `~/go/bin/wails dev`)*
+# Globally install the Microsoft VSCE builder 
+npm install -g @vscode/vsce
 
-To easily build a native macOS or Windows app binary:
-```bash
-wails build
-# Or: ~/go/bin/wails build
+# Physically bundle the extension to generate the output .vsix artifact!
+vsce package
 ```
 
 ---
 
 ## 🛠 Tech Stack
-- **Backend Shell**: Go + Wails
-- **Intelligence**: Native HTTP Go-routines binding directly to Ollama REST endpoints (Gemma & Nomic)
-- **Frontend Layer**: React + TypeScript + Monaco Editor + React Markdown
+- **Extension Node Core**: Visual Studio Code API + Typescript
+- **AST Mapping Engine**: Native `vscode.executeWorkspaceSymbolProvider` Context Extractions
+- **React Frontend**: Vite + Typescript + React Markdown + Prism Code Rendering
+- **Cryptography**: Native OS `SecretStorage` Mappings
 
 ## License
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed securely under the MIT License.
